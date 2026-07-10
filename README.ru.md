@@ -1,5 +1,7 @@
 # Copy Links from Block
 
+🌐 [English](README.md) | **Русский**
+
 Расширение для Chrome, которое копирует все ссылки из HTML-блока по правому клику мыши.
 
 ## Установка
@@ -30,10 +32,13 @@
 ├── manifest.json     — манифест Chrome Extension (Manifest V3)
 ├── background.js     — фоновый service worker (контекстное меню)
 ├── content.js        — content script (логика извлечения ссылок)
-├── icon16.png
-├── icon48.png
-├── icon128.png
+├── icons/
+│   ├── icon16.png
+│   ├── icon48.png
+│   └── icon128.png
 ├── README.md
+├── README.ru.md
+├── README.en.md
 └── LICENSE
 ```
 
