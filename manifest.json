@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Copy Links from Block",
+  "version": "1.0",
+  "description": "Копирует все ссылки из блока, на который кликнули правой кнопкой мыши",
+  "permissions": [
+    "contextMenus",
+    "clipboardWrite",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
