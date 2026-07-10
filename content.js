@@ -1,8 +1,107 @@
 let clickedElement = null;
+let activeModifiers = new Set();
+let highlightedEl = null;
+let highlightTimer = null;
+let config = { modifier: 'Alt' };
+
+loadConfig();
+
+function loadConfig() {
+  try {
+    chrome.storage.local.get('config', (data) => {
+      if (data.config) config = data.config;
+    });
+  } catch (_) {}
+}
+
+try {
+  chrome.storage.onChanged.addListener((changes) => {
+    if (changes.config) config = changes.config.newValue;
+  });
+} catch (_) {}
 
 document.addEventListener('contextmenu', (e) => {
   clickedElement = e.target;
 }, true);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === config.modifier && !e.repeat) {
+    activeModifiers.add(e.key);
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  if (e.key === config.modifier) {
+    activeModifiers.delete(e.key);
+    clearHighlight();
+  }
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    activeModifiers.clear();
+    clearHighlight();
+  }
+});
+
+window.addEventListener('blur', () => {
+  activeModifiers.clear();
+  clearHighlight();
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (activeModifiers.size === 0) return;
+  if (highlightTimer) return;
+  highlightTimer = requestAnimationFrame(() => {
+    highlightTimer = null;
+    if (activeModifiers.size === 0) return;
+    highlightBlock(e.target);
+  });
+});
+
+document.addEventListener('click', (e) => {
+  if (activeModifiers.size === 0) return;
+
+  const tag = e.target.tagName;
+  if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag) || e.target.isContentEditable) return;
+
+  const { links } = findContainer(e.target);
+  if (links.length < 2) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const urls = Array.from(links).map(a => a.href);
+  navigator.clipboard.writeText(urls.join('\n')).then(() => {
+    showToast(`Скопировано ${urls.length} ссылок`);
+  }).catch(() => {
+    showToast('Ошибка копирования');
+  });
+
+  clearHighlight();
+  activeModifiers.clear();
+});
+
+function highlightBlock(el) {
+  const { container, links } = findContainer(el);
+  if (links.length < 2 || container === document.body || container === document.documentElement) {
+    clearHighlight();
+    return;
+  }
+  if (container === highlightedEl) return;
+  clearHighlight();
+  highlightedEl = container;
+  highlightedEl.style.outline = '2px solid #5b9bd5';
+  highlightedEl.style.outlineOffset = '-1px';
+}
+
+function clearHighlight() {
+  if (highlightedEl) {
+    highlightedEl.style.outline = '';
+    highlightedEl.style.outlineOffset = '';
+    highlightedEl = null;
+  }
+}
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action !== 'copyLinks') return;
@@ -27,14 +126,11 @@ function copyLinksFromBlock() {
     showToast('Ошибка: не удалось определить элемент');
     return;
   }
-
-  const { container, links } = findContainer(el);
-
+  const { links } = findContainer(el);
   if (links.length === 0) {
     showToast('Ссылки не найдены');
     return;
   }
-
   const urls = Array.from(links).map(a => a.href);
   navigator.clipboard.writeText(urls.join('\n')).then(() => {
     showToast(`Скопировано ${urls.length} ссылок`);
@@ -46,7 +142,6 @@ function copyLinksFromBlock() {
 function showToast(text) {
   const existing = document.getElementById('clb-toast');
   if (existing) existing.remove();
-
   const toast = document.createElement('div');
   toast.id = 'clb-toast';
   toast.textContent = text;
