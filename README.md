@@ -16,7 +16,7 @@ Chrome extension that copies all links from an HTML block via right-click.
 1. Hover over any block with links on a page
 2. **Right-click** anywhere inside the block
 3. Select **«Копировать ссылки из блока»**
-4. URLs are copied to your clipboard — a toast notification will appear
+4. URLs are copied to your clipboard - a toast notification will appear
 
 Copied URLs are separated by newlines. Paste them into a text editor, terminal, or anywhere else.
 
@@ -24,14 +24,14 @@ Copied URLs are separated by newlines. Paste them into a text editor, terminal, 
 
 The extension captures the right-clicked element, then walks up the DOM tree until it finds a parent container with **2 or more links**. All `href` values from that container are collected and copied to the clipboard.
 
-This approach is not tied to any specific CSS class or selector — it works with any HTML structure.
+This approach is not tied to any specific CSS class or selector - it works with any HTML structure.
 
 ## Project structure
 
 ```
-├── manifest.json     — Chrome Extension manifest (Manifest V3)
-├── background.js     — background service worker (context menu)
-├── content.js        — content script (link extraction logic)
+├── manifest.json     - Chrome Extension manifest (Manifest V3)
+├── background.js     - background service worker (context menu)
+├── content.js        - content script (link extraction logic)
 ├── icons/
 │   ├── icon16.png
 │   ├── icon48.png
