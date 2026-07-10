@@ -73,9 +73,9 @@ document.addEventListener('click', (e) => {
 
   const urls = Array.from(links).map(a => a.href);
   navigator.clipboard.writeText(urls.join('\n')).then(() => {
-    showToast(`Скопировано ${urls.length} ссылок`);
+    showToast(chrome.i18n.getMessage('copiedLinks', [String(urls.length)]));
   }).catch(() => {
-    showToast('Ошибка копирования');
+    showToast(chrome.i18n.getMessage('errorCopyFailed'));
   });
 
   clearHighlight();
@@ -123,19 +123,19 @@ function findContainer(el) {
 function copyLinksFromBlock() {
   const el = clickedElement;
   if (!el) {
-    showToast('Ошибка: не удалось определить элемент');
+    showToast(chrome.i18n.getMessage('errorNoElement'));
     return;
   }
   const { links } = findContainer(el);
   if (links.length === 0) {
-    showToast('Ссылки не найдены');
+    showToast(chrome.i18n.getMessage('errorNoLinksFound'));
     return;
   }
   const urls = Array.from(links).map(a => a.href);
   navigator.clipboard.writeText(urls.join('\n')).then(() => {
-    showToast(`Скопировано ${urls.length} ссылок`);
+    showToast(chrome.i18n.getMessage('copiedLinks', [String(urls.length)]));
   }).catch(() => {
-    showToast('Ошибка копирования в буфер обмена');
+    showToast(chrome.i18n.getMessage('errorCopyFailed'));
   });
 }
 

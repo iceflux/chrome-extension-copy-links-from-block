@@ -1,0 +1,22 @@
+{
+  "contextMenuTitle": {
+    "message": "Copy links from block",
+    "description": "Context menu item title"
+  },
+  "copiedLinks": {
+    "message": "Copied $1 links",
+    "description": "Shown after copying links. $1 = number of links"
+  },
+  "errorNoElement": {
+    "message": "Could not identify element",
+    "description": "Error when clicked element is not found"
+  },
+  "errorNoLinksFound": {
+    "message": "No links found",
+    "description": "Error when no links are found in the block"
+  },
+  "errorCopyFailed": {
+    "message": "Copy error",
+    "description": "Error when clipboard write fails"
+  }
+}

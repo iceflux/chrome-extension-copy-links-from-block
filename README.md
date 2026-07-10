@@ -18,7 +18,7 @@ There are two ways to copy links:
 ### 1. Context menu (always works)
 
 1. **Right-click** anywhere inside a block with links
-2. Select **«Копировать ссылки из блока»**
+2. Select **"Copy links from block"**
 3. URLs are copied to your clipboard
 
 ### 2. Modifier key + click (faster)

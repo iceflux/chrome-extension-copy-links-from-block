@@ -1,7 +1,7 @@
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: 'copyLinksFromBlock',
-    title: 'Копировать ссылки из блока',
+    title: chrome.i18n.getMessage('contextMenuTitle'),
     contexts: ['all']
   });
 });
